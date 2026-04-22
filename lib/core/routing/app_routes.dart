@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/signup_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
+import '../../features/profile/data/datasources/profile_remote_datasource.dart';
+import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/domain/usecases/get_current_profile_usecase.dart';
+import '../../features/profile/domain/usecases/update_current_profile_usecase.dart';
+import '../../features/profile/presentation/controllers/profile_view_model.dart';
+import '../../features/profile/presentation/pages/profile_screen.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -10,6 +16,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String signUp = '/sign-up';
   static const String home = '/home';
+  static const String profile = '/profile';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -26,6 +33,18 @@ class AppRoutes {
       case home:
         return MaterialPageRoute<void>(
           builder: (_) => const HomeScreen(),
+          settings: settings,
+        );
+      case profile:
+        final repository = ProfileRepositoryImpl(
+          remoteDataSource: const ProfileRemoteDataSource(),
+        );
+        final viewModel = ProfileViewModel(
+          getCurrentProfileUseCase: GetCurrentProfileUseCase(repository),
+          updateCurrentProfileUseCase: UpdateCurrentProfileUseCase(repository),
+        );
+        return MaterialPageRoute<void>(
+          builder: (_) => ProfileScreen(viewModel: viewModel),
           settings: settings,
         );
       default:

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/routing/app_routes.dart';
+import '../../../../core/services/navigation_service.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -9,17 +12,31 @@ class HomeScreen extends StatelessWidget {
     final horizontalPadding = size.width >= 840
         ? size.width * 0.25
         : size.width >= 600
-            ? size.width * 0.15
-            : 20.0;
+        ? size.width * 0.15
+        : 20.0;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Mind Space'),
+        actions: [
+          IconButton(
+            tooltip: 'Profile',
+            onPressed: () {
+              NavigationService.instance.pushNamed(AppRoutes.profile);
+            },
+            icon: const Icon(Icons.person_outline),
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(horizontalPadding, 24, horizontalPadding, 24),
+        padding: EdgeInsets.fromLTRB(
+          horizontalPadding,
+          24,
+          horizontalPadding,
+          24,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -42,8 +59,8 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     'You are logged in',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
