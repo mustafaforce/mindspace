@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/services/navigation_service.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
 import '../widgets/auth_layout.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,7 +12,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _authRemoteDataSource = const AuthRemoteDataSource();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,44 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     setState(() => _isLoading = true);
-    try {
-      final response = await _authRemoteDataSource.signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
 
-      if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 800));
 
-      if (response.session != null) {
-        await NavigationService.instance.pushReplacementNamed<void, void>(
-          AppRoutes.home,
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login completed, but no active session found.'),
-          ),
-        );
-      }
-    } on AuthException catch (error) {
-      if (!mounted) return;
-      final lowerMessage = error.message.toLowerCase();
-      final userMessage = lowerMessage.contains('email not confirmed')
-          ? 'Please verify your email from the magic link, then log in.'
-          : error.message;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(userMessage)),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Something went wrong. Please try again.')),
-      );
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
+    if (!mounted) return;
+
+    await NavigationService.instance.pushReplacementNamed<void, void>(
+      AppRoutes.home,
+    );
   }
 
   @override

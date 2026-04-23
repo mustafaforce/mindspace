@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/signup_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
-import '../../features/profile/data/datasources/profile_remote_datasource.dart';
-import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/data/repositories/mock_profile_repository.dart';
 import '../../features/profile/domain/usecases/get_current_profile_usecase.dart';
 import '../../features/profile/domain/usecases/update_current_profile_usecase.dart';
 import '../../features/profile/presentation/controllers/profile_view_model.dart';
@@ -36,9 +35,7 @@ class AppRoutes {
           settings: settings,
         );
       case profile:
-        final repository = ProfileRepositoryImpl(
-          remoteDataSource: const ProfileRemoteDataSource(),
-        );
+        final repository = const MockProfileRepository();
         final viewModel = ProfileViewModel(
           getCurrentProfileUseCase: GetCurrentProfileUseCase(repository),
           updateCurrentProfileUseCase: UpdateCurrentProfileUseCase(repository),
