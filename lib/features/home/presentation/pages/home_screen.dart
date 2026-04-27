@@ -77,8 +77,27 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: const Color(0x332A7A78)),
                 ),
-                child: const Center(
-                  child: Text('Home Dashboard (Coming Soon)'),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Home Dashboard (Coming Soon)'),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          NavigationService.instance.pushNamed(AppRoutes.moodLog);
+                        },
+                        icon: const Icon(Icons.add_reaction_outlined),
+                        label: const Text('Log Your Mood'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
