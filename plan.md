@@ -198,7 +198,7 @@ dependencies:
 
 1. **SQL schemas** (`supabase/` folder)
    - [x] `mood_schema.sql` — mood_logs, mood_questions, mood_question_responses, custom_mood_labels ✓
-   - [ ] `journal_schema.sql` — journal_entries
+   - [x] `journal_schema.sql` — journal_entries ✓
    - [ ] `exercise_schema.sql` — guided_exercises, exercise_sessions
    - [ ] `resource_schema.sql` — resource_categories, wellness_resources, saved_resources
    - [ ] `notification_schema.sql` — notification_preferences
@@ -207,6 +207,9 @@ dependencies:
    - [x] Data layer (datasource, models, repository impl) ✓
    - [x] Presentation layer (viewmodel, pages, widgets) ✓
 3. **Journal feature** (reuses mood infrastructure)
+   - [x] Domain layer ✓
+   - [x] Data layer ✓
+   - [x] Presentation layer ✓
 4. **Exercises feature** (uses journal entry type)
 5. **Resources feature** (independent, can parallel)
 6. **Home screen** (bottom nav + mood selector widget)
