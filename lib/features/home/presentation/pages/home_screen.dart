@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/services/navigation_service.dart';
+import '../../../exercises/presentation/pages/exercise_list_screen.dart';
 import '../../../journal/presentation/pages/journal_screen.dart';
 import '../../../profile/presentation/pages/profile_screen.dart';
 import '../../../profile/data/datasources/profile_remote_datasource.dart';
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const _HomeContent(),
       const JournalScreen(),
       const _InsightsPlaceholder(),
-      const _ResourcesPlaceholder(),
+      const ExerciseListScreen(),
       _ProfileTab(viewModel: _profileViewModel),
     ];
   }
@@ -211,38 +212,6 @@ class _InsightsPlaceholder extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Track your mood to see trends here',
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ResourcesPlaceholder extends StatelessWidget {
-  const _ResourcesPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Resources'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.favorite_outline, size: 64, color: Colors.grey.shade300),
-            const SizedBox(height: 16),
-            Text(
-              'Resources coming soon',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Wellness articles and tips will appear here',
               style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
             ),
           ],

@@ -6,6 +6,8 @@ import '../../features/home/presentation/pages/home_screen.dart';
 import '../../features/journal/presentation/pages/journal_screen.dart';
 import '../../features/journal/presentation/pages/journal_entry_screen.dart';
 import '../../features/mood/presentation/pages/mood_logger_screen.dart';
+import '../../features/exercises/presentation/pages/exercise_list_screen.dart';
+import '../../features/exercises/presentation/pages/exercise_player_screen.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/usecases/get_current_profile_usecase.dart';
@@ -24,6 +26,8 @@ class AppRoutes {
   static const String journalNew = '/journal/new';
   static const String journalEdit = '/journal/edit';
   static const String profile = '/profile';
+  static const String exercises = '/exercises';
+  static const String exercisePlayer = '/exercises/:id';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -75,7 +79,19 @@ class AppRoutes {
           builder: (_) => ProfileScreen(viewModel: viewModel),
           settings: settings,
         );
+      case exercises:
+        return MaterialPageRoute<void>(
+          builder: (_) => const ExerciseListScreen(),
+          settings: settings,
+        );
       default:
+        if (settings.name?.startsWith('/exercises/') == true) {
+          final exerciseId = settings.name!.split('/').last;
+          return MaterialPageRoute<void>(
+            builder: (_) => ExercisePlayerScreen(exerciseId: exerciseId),
+            settings: settings,
+          );
+        }
         return MaterialPageRoute<void>(
           builder: (_) => const LoginScreen(),
           settings: settings,
