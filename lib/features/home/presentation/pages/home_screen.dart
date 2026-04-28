@@ -2,9 +2,86 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/services/navigation_service.dart';
+import '../../../journal/presentation/pages/journal_screen.dart';
+import '../../../profile/presentation/pages/profile_screen.dart';
+import '../../../profile/data/datasources/profile_remote_datasource.dart';
+import '../../../profile/data/repositories/profile_repository_impl.dart';
+import '../../../profile/domain/usecases/get_current_profile_usecase.dart';
+import '../../../profile/domain/usecases/update_current_profile_usecase.dart';
+import '../../../profile/presentation/controllers/profile_view_model.dart';
+import '../../../resources/presentation/pages/resources_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  late final ProfileViewModel _profileViewModel;
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    final repository = ProfileRepositoryImpl(
+      remoteDataSource: const ProfileRemoteDataSource(),
+    );
+    _profileViewModel = ProfileViewModel(
+      getCurrentProfileUseCase: GetCurrentProfileUseCase(repository),
+      updateCurrentProfileUseCase: UpdateCurrentProfileUseCase(repository),
+    );
+    _profileViewModel.loadProfile();
+    _pages = [
+      const _HomeContent(),
+      const JournalScreen(),
+      const ResourcesScreen(),
+      _ProfileTab(viewModel: _profileViewModel),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book),
+            label: 'Journal',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.favorite_outline),
+            selectedIcon: Icon(Icons.favorite),
+            label: 'Resources',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outlined),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HomeContent extends StatelessWidget {
+  const _HomeContent();
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +96,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Mind Space'),
-        actions: [
-          IconButton(
-            tooltip: 'Profile',
-            onPressed: () {
-              NavigationService.instance.pushNamed(AppRoutes.profile);
-            },
-            icon: const Icon(Icons.person_outline),
-          ),
-        ],
+        centerTitle: true,
       ),
       body: Container(
         width: double.infinity,
@@ -64,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Welcome to Mind Space. We will build the mood tracking modules step by step from here.',
+                    'Welcome to Mind Space. Start tracking your mood today.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -77,8 +146,33 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: const Color(0x332A7A78)),
                 ),
-                child: const Center(
-                  child: Text('Home Dashboard (Coming Soon)'),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.emoji_emotions_outlined,
+                        size: 48,
+                        color: Color(0xFF2A7A78),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('How are you feeling today?'),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          NavigationService.instance.pushNamed(AppRoutes.moodLog);
+                        },
+                        icon: const Icon(Icons.add_reaction_outlined),
+                        label: const Text('Log Your Mood'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -86,5 +180,16 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _ProfileTab extends StatelessWidget {
+  final ProfileViewModel viewModel;
+
+  const _ProfileTab({required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return ProfileScreen(viewModel: viewModel);
   }
 }
