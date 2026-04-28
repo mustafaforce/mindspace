@@ -8,6 +8,8 @@ import '../../features/journal/presentation/pages/journal_entry_screen.dart';
 import '../../features/mood/presentation/pages/mood_logger_screen.dart';
 import '../../features/exercises/presentation/pages/exercise_list_screen.dart';
 import '../../features/exercises/presentation/pages/exercise_player_screen.dart';
+import '../../features/resources/presentation/pages/resources_screen.dart';
+import '../../features/resources/presentation/pages/resource_detail_screen.dart';
 import '../../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/usecases/get_current_profile_usecase.dart';
@@ -28,6 +30,8 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String exercises = '/exercises';
   static const String exercisePlayer = '/exercises/:id';
+  static const String resources = '/resources';
+  static const String resourceDetail = '/resources/:id';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -84,11 +88,23 @@ class AppRoutes {
           builder: (_) => const ExerciseListScreen(),
           settings: settings,
         );
+      case resources:
+        return MaterialPageRoute<void>(
+          builder: (_) => const ResourcesScreen(),
+          settings: settings,
+        );
       default:
         if (settings.name?.startsWith('/exercises/') == true) {
           final exerciseId = settings.name!.split('/').last;
           return MaterialPageRoute<void>(
             builder: (_) => ExercisePlayerScreen(exerciseId: exerciseId),
+            settings: settings,
+          );
+        }
+        if (settings.name?.startsWith('/resources/') == true) {
+          final resourceId = settings.name!.split('/').last;
+          return MaterialPageRoute<void>(
+            builder: (_) => ResourceDetailScreen(resourceId: resourceId),
             settings: settings,
           );
         }

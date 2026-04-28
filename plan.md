@@ -38,9 +38,6 @@ The Mind Space mental wellness app currently has only authentication and profile
 - **`wellness_resources`** — id, category_id, title, summary, content (markdown), thumbnail_url, read_time_minutes, tags, is_featured, display_order, is_active
 - **`saved_resources`** — user_id, resource_id (composite PK), saved_at
 
-### Notifications
-- **`notification_preferences`** — user_id, daily_reminder_enabled, daily_reminder_time, weekly_insight_enabled, exercise_reminder_enabled, created_at, updated_at
-
 All tables: RLS enabled (users own their data). `guided_exercises` and `wellness_resources` are publicly readable to authenticated users.
 
 ---
@@ -63,26 +60,20 @@ All tables: RLS enabled (users own their data). `guided_exercises` and `wellness
 - Resource categories with icons
 - Article list with thumbnails and summaries
 - Bookmark/save functionality
-- Markdown content rendering
-
-### Feature 4: Notifications & Reminders (table only)
-- Notification preferences table
-- Daily reminder, weekly insight, exercise reminder toggles
 
 ---
 
 ## UI Structure
 
-**Bottom Navigation (5 tabs):**
+**Bottom Navigation (4 tabs):**
 ```
-[Home] [Journal] [Insights] [Resources] [Profile]
+[Home] [Journal] [Resources] [Profile]
 ```
 
-- **Home:** Quick mood selector → 7 questions → save + suggested exercise
+- **Home:** Quick mood selector → 7 questions → save
 - **Journal:** Entry list + FAB for new entry (free write or guided)
-- **Insights:** Simple mood history chart (placeholder this phase)
 - **Resources:** Category chips + featured + article list + bookmarks
-- **Profile:** Existing profile screen + notification settings
+- **Profile:** Existing profile screen
 
 ---
 
@@ -98,8 +89,6 @@ All tables: RLS enabled (users own their data). `guided_exercises` and `wellness
 | `/exercises` | ExerciseListScreen |
 | `/exercises/:id` | ExercisePlayerScreen |
 | `/resources` | ResourcesScreen |
-| `/resources/:id` | ResourceDetailScreen |
-| `/insights` | InsightsScreen |
 
 ---
 
@@ -151,17 +140,14 @@ presentation/widgets/breathing_animation.dart
 ```
 data/datasources/resource_remote_datasource.dart
 data/models/resource_category_model.dart
-data/models/wellness_resource_model.dart
 data/repositories/resource_repository_impl.dart
 domain/entities/resource_category.dart
-domain/entities/wellness_resource.dart
 domain/repositories/resource_repository.dart
 domain/usecases/get_categories_usecase.dart
 domain/usecases/get_resources_usecase.dart
 domain/usecases/save_resource_usecase.dart
 presentation/controllers/resource_view_model.dart
 presentation/pages/resources_screen.dart
-presentation/pages/resource_detail_screen.dart
 presentation/widgets/resource_card.dart
 presentation/widgets/category_chips.dart
 ```
@@ -172,14 +158,12 @@ mood_schema.sql
 journal_schema.sql
 exercise_schema.sql
 resource_schema.sql
-notification_schema.sql
 ```
 
 ### Updates to Existing Files
 ```
 lib/core/routing/app_routes.dart — add new routes
 lib/features/home/presentation/pages/home_screen.dart — add bottom nav + mood selector
-lib/core/theme/app_theme.dart — add exercise/resource colors if needed
 ```
 
 ---
@@ -199,9 +183,8 @@ dependencies:
 1. **SQL schemas** (`supabase/` folder)
    - [x] `mood_schema.sql` — mood_logs, mood_questions, mood_question_responses, custom_mood_labels ✓
    - [x] `journal_schema.sql` — journal_entries ✓
-   - [ ] `exercise_schema.sql` — guided_exercises, exercise_sessions
-   - [ ] `resource_schema.sql` — resource_categories, wellness_resources, saved_resources
-   - [ ] `notification_schema.sql` — notification_preferences
+   - [x] `exercise_schema.sql` — guided_exercises, exercise_sessions ✓
+   - [x] `resource_schema.sql` — resource_categories, wellness_resources, saved_resources ✓
 2. **Mood feature** (foundation — all others depend on it)
    - [x] Domain layer (entities, repository interface, usecases) ✓
    - [x] Data layer (datasource, models, repository impl) ✓
@@ -211,9 +194,17 @@ dependencies:
    - [x] Data layer ✓
    - [x] Presentation layer ✓
 4. **Exercises feature** (uses journal entry type)
+   - [x] Domain layer ✓
+   - [x] Data layer ✓
+   - [x] Presentation layer ✓
 5. **Resources feature** (independent, can parallel)
+   - [x] Domain layer ✓
+   - [x] Data layer ✓
+   - [x] Presentation layer ✓
 6. **Home screen** (bottom nav + mood selector widget)
+   - [x] ✓
 7. **Routing** (wire everything together)
+   - [x] ✓
 
 ---
 
